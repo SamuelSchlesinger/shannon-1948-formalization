@@ -26,15 +26,20 @@ The central result is:
 
 ## Main Theorems
 
-- `Shannon.entropyNat_unique`
-  in `Shannon/Entropy/Final.lean`
-- `Shannon.entropyBase_unique`
-  in `Shannon/Entropy/Final.lean`
-
-Direct locations:
+### Characterization (Appendix 2)
 
 - `entropyNat_unique`: `Shannon/Entropy/Final.lean`
 - `entropyBase_unique`: `Shannon/Entropy/Final.lean`
+
+### Section 6 Properties
+
+- `entropyNat_eq_zero_iff`: H = 0 iff deterministic — `Shannon/Entropy/Properties.lean`
+- `entropyNat_eq_log_card_iff`: H = log|α| iff uniform — `Shannon/Entropy/Properties.lean`
+- `entropyNat_joint_le_add`: subadditivity H(X,Y) ≤ H(X) + H(Y) — `Shannon/Entropy/Properties.lean`
+- `condEntropy_le_entropyNat`: conditioning reduces entropy — `Shannon/Entropy/Properties.lean`
+- `condEntropy_nonneg`: conditional entropy ≥ 0 — `Shannon/Entropy/Properties.lean`
+- `chain_rule`: H(X,Y) = H(X) + H_X(Y) — `Shannon/Entropy/Joint.lean`
+- `entropyNat_prodDist`: H(X×Y) = H(X) + H(Y) — `Shannon/Entropy/Joint.lean`
 
 ## Module Layout
 
@@ -48,6 +53,12 @@ Direct locations:
   Phase 3: floor-count rational approximants and convergence lemmas.
 - `Shannon/Entropy/Final.lean`
   Final uniqueness theorems.
+- `Shannon/Entropy/Gibbs.lean`
+  Gibbs inequality, negMulLog bridge, entropy nonnegativity, uniform entropy.
+- `Shannon/Entropy/Joint.lean`
+  Joint distributions, marginals, conditional entropy, chain rule.
+- `Shannon/Entropy/Properties.lean`
+  Section 6 properties: deterministic iff, uniform iff, subadditivity, conditioning.
 - `Shannon/Entropy.lean`
   Facade import.
 - `Shannon.lean`
@@ -64,6 +75,9 @@ If you want to read this like a paper:
 4. Read `Shannon/Entropy/Approx.lean` for the continuity bridge
    (`approxProb p N → p`).
 5. Finish in `Shannon/Entropy/Final.lean` for the final uniqueness theorems.
+6. Continue to `Shannon/Entropy/Gibbs.lean` for the Gibbs inequality.
+7. Read `Shannon/Entropy/Joint.lean` for joint distributions and the chain rule.
+8. Read `Shannon/Entropy/Properties.lean` for the Section 6 entropy properties.
 
 For pedagogical context, see the worked decomposition theorem in
 `Shannon/Entropy/Rational.lean`:
