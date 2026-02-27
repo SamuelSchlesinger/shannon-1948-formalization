@@ -2,5 +2,10 @@ name = "lib"
 version = "0.1.0"
 defaultTargets = ["Shannon"]
 
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.28.0"
+
 [[lean_lib]]
 name = "Shannon"
