@@ -31,6 +31,10 @@ The central result is:
 - `entropyNat_unique`: `Shannon/Entropy/Final.lean`
 - `entropyBase_unique`: `Shannon/Entropy/Final.lean`
 
+### Converse
+
+- `entropyNat_shannonAxioms`: `entropyNat` satisfies `ShannonEntropyAxioms` — `Shannon/Entropy/Converse.lean`
+
 ### Section 6 Properties
 
 - `entropyNat_eq_zero_iff`: H = 0 iff deterministic — `Shannon/Entropy/Properties.lean`
@@ -60,6 +64,8 @@ The central result is:
   Joint distributions, marginals, conditional entropy, chain rule.
 - `Shannon/Entropy/Properties.lean`
   Section 6 properties: deterministic iff, uniform iff, subadditivity, Schur-concavity, conditioning.
+- `Shannon/Entropy/Converse.lean`
+  Converse: `entropyNat` satisfies the Shannon axioms, completing the iff characterization.
 - `Shannon/Entropy.lean`
   Facade import.
 - `Shannon.lean`
@@ -79,6 +85,7 @@ If you want to read this like a paper:
 6. Continue to `Shannon/Entropy/Gibbs.lean` for the Gibbs inequality.
 7. Read `Shannon/Entropy/Joint.lean` for joint distributions and the chain rule.
 8. Read `Shannon/Entropy/Properties.lean` for the Section 6 entropy properties.
+9. Read `Shannon/Entropy/Converse.lean` for the proof that `entropyNat` satisfies the axioms.
 
 For pedagogical context, see the worked decomposition theorem in
 `Shannon/Entropy/Rational.lean`:
