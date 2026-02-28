@@ -12,7 +12,7 @@ Gibbs inequality and concavity of `negMulLog`.
 1. `entropyNat_eq_zero_iff` — `H(p) = 0` iff `p` is deterministic
 2. `entropyNat_eq_log_card_iff` — `H(p) = log |α|` iff `p` is uniform
 3. `entropyNat_joint_le_add` — subadditivity: `H(X,Y) ≤ H(X) + H(Y)`
-4. Schur-concavity (doubly stochastic averaging) — deferred to a follow-up
+4. `entropyNat_doublyStochastic_le` — Schur-concavity: doubly stochastic averaging
 5. `condEntropy_le_entropyNat` — conditioning reduces entropy: `H_X(Y) ≤ H(Y)`
 6. `condEntropy_nonneg` — conditional entropy is nonnegative
 -/
@@ -200,6 +200,55 @@ theorem entropyNat_joint_le_add {α β : Type} [Fintype α] [Fintype β]
           apply Finset.sum_congr rfl; intro b _; rw [Finset.sum_mul]
       _ = ∑ b, marginalSnd p b * Real.log (marginalSnd p b) := rfl
   rw [hm1sum, hm2sum, Finset.sum_neg_distrib]; linarith
+
+/-! ## Property 4: Schur-concavity (doubly stochastic averaging) -/
+
+open Matrix in
+/-- Apply a doubly stochastic matrix `A` to a probability distribution `p`,
+yielding the distribution with `(Ap)_i = ∑_j A_{ij} p_j`. -/
+def doublyStochasticApply {n : Type} [Fintype n] [DecidableEq n]
+    (A : Matrix n n ℝ) (hA : A ∈ doublyStochastic ℝ n) (p : ProbDist n) : ProbDist n := by
+  refine ⟨fun i => ∑ j, A i j * p j, ?_⟩
+  constructor
+  · intro i
+    exact Finset.sum_nonneg fun j _ =>
+      mul_nonneg (nonneg_of_mem_doublyStochastic hA) (prob_nonneg p j)
+  · calc ∑ i, ∑ j, A i j * p j
+        = ∑ j, (∑ i, A i j) * p j := by rw [Finset.sum_comm]; simp_rw [Finset.sum_mul]
+      _ = ∑ j, 1 * p j := by
+          congr 1; ext j; congr 1; exact sum_col_of_mem_doublyStochastic hA j
+      _ = 1 := by simp [prob_sum_eq_one p]
+
+open Matrix in
+/-- **Property 4** (Schur-concavity): `H(p) ≤ H(Ap)` for doubly stochastic `A`.
+
+The proof applies Jensen's inequality for `negMulLog` row-by-row with weights
+`A_{ij}`, then sums over rows and uses column-stochasticity to collapse. -/
+theorem entropyNat_doublyStochastic_le {n : Type} [Fintype n] [DecidableEq n]
+    (A : Matrix n n ℝ) (hA : A ∈ doublyStochastic ℝ n) (p : ProbDist n) :
+    entropyNat p ≤ entropyNat (doublyStochasticApply A hA p) := by
+  rw [entropyNat_eq_sum_negMulLog, entropyNat_eq_sum_negMulLog]
+  -- Per-row Jensen: ∑_j A_{ij} * negMulLog(p_j) ≤ negMulLog(∑_j A_{ij} * p_j)
+  have hrow : ∀ i, ∑ j, A i j * negMulLog (p j) ≤
+      negMulLog (doublyStochasticApply A hA p i) := by
+    intro i
+    show ∑ j, A i j * negMulLog (p j) ≤ negMulLog (∑ j, A i j * p j)
+    have := Real.concaveOn_negMulLog.le_map_sum
+      (t := Finset.univ) (w := fun j => A i j) (p := fun j => (p j : ℝ))
+      (fun j _ => nonneg_of_mem_doublyStochastic hA)
+      (sum_row_of_mem_doublyStochastic hA i)
+      (fun j _ => prob_nonneg p j)
+    simp_rw [smul_eq_mul] at this
+    exact this
+  -- Sum over rows: ∑_i ∑_j A_{ij} * negMulLog(p_j) ≤ ∑_i negMulLog((Ap)_i)
+  have hsum : ∑ i, ∑ j, A i j * negMulLog (p j) ≤
+      ∑ i, negMulLog (doublyStochasticApply A hA p i) :=
+    Finset.sum_le_sum fun i _ => hrow i
+  -- Collapse LHS: swap sums, use column-stochasticity ∑_i A_{ij} = 1
+  have hlhs : ∑ i, ∑ j, A i j * negMulLog (p j) = ∑ j, negMulLog (p j) := by
+    rw [Finset.sum_comm]; congr 1; ext j
+    rw [← Finset.sum_mul, sum_col_of_mem_doublyStochastic hA j, one_mul]
+  linarith
 
 /-! ## Properties 5-6: Conditioning reduces entropy -/
 
