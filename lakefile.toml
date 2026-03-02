@@ -1,4 +1,4 @@
-name = "lib"
+name = "shannon-entropy"
 version = "0.1.0"
 defaultTargets = ["Shannon"]
 
