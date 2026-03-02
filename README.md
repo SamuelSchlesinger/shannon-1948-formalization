@@ -119,6 +119,12 @@ represented explicitly as:
 
 This makes permutation/relabeling steps fully explicit in Lean proofs.
 
+## AI Assistance
+
+This project was developed with substantial assistance from Claude (Anthropic).
+Claude contributed to proof development, code structure, and documentation
+throughout the formalization effort.
+
 ## Reference
 
 - Claude E. Shannon, *A Mathematical Theory of Communication* (1948).
